@@ -34,14 +34,6 @@
   .img-label { position: absolute; bottom: 10px; left: 10px; background: rgba(28,20,16,.78); color: #d4956a; font-size: 12px; padding: 4px 10px; border-radius: 20px; letter-spacing: .5px; }
   .click-hint { position: absolute; bottom: 10px; right: 10px; background: rgba(212,149,106,.12); color: #d4956a; font-size: 10px; padding: 3px 8px; border-radius: 20px; border: 0.5px solid #d4956a; }
 
-  .gallery-overlay { display: none; position: absolute; inset: 0; background: rgba(18,10,6,.96); z-index: 10; flex-direction: column; align-items: center; justify-content: center; padding: 12px; }
-  .gallery-overlay.active { display: flex; }
-  .gallery-big { width: 100%; height: 155px; object-fit: cover; border-radius: 8px; }
-  .gallery-thumbs { display: flex; gap: 6px; margin-top: 9px; width: 100%; }
-  .gallery-thumb { flex: 1; height: 48px; object-fit: cover; border-radius: 4px; cursor: pointer; opacity: .5; transition: opacity .2s; border: 1.5px solid transparent; }
-  .gallery-thumb.active, .gallery-thumb:hover { opacity: 1; border-color: #d4956a; }
-  .close-btn { position: absolute; top: 10px; right: 12px; background: none; border: none; color: #d4956a; font-size: 20px; cursor: pointer; z-index: 11; line-height: 1; padding: 4px; }
-
   .thumb-strip { display: flex; gap: 5px; padding: 7px 7px 0; }
   .thumb { flex: 1; height: 54px; object-fit: cover; border-radius: 4px; cursor: pointer; opacity: .6; transition: opacity .2s; }
   .thumb:hover { opacity: 1; }
@@ -61,18 +53,126 @@
   .from-price { font-size: 17px; font-weight: 500; color: #d4956a; }
 
   .car-strip { margin-top: 1.5rem; background: #261c14; border: 0.5px solid #3d2d1e; border-radius: 12px; padding: 15px 20px; display: flex; align-items: center; justify-content: center; gap: 16px; }
-  <div id="map" style="width:100%; height:320px; border-radius:12px; margin-top:1.5rem; border:0.5px solid #3d2d1e;"></div>
   .car-text p { font-size: 11px; color: #7a5c45; letter-spacing: .5px; text-transform: uppercase; }
   .car-text strong { font-size: 18px; font-weight: 500; color: #d4956a; }
 
   .site-footer { text-align: center; margin-top: 1.5rem; font-size: 11px; color: #4a3020; letter-spacing: 1px; padding-bottom: 1rem; }
+
+  /* ── LIGHTBOX ── */
+  .lb-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,6,4,.97);
+    z-index: 9999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .lb-overlay.open { display: flex; }
+
+  .lb-close {
+    position: fixed;
+    top: 16px; right: 20px;
+    background: rgba(212,149,106,.15);
+    border: 0.5px solid #d4956a;
+    color: #d4956a;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 38px; height: 38px;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 10001;
+    transition: background .2s;
+  }
+  .lb-close:hover { background: rgba(212,149,106,.3); }
+
+  .lb-img-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 860px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+  }
+
+  .lb-img {
+    max-width: 100%;
+    max-height: calc(100vh - 180px);
+    border-radius: 8px;
+    object-fit: contain;
+    display: block;
+    transition: opacity .18s;
+  }
+
+  .lb-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(212,149,106,.15);
+    border: 0.5px solid #d4956a;
+    color: #d4956a;
+    font-size: 28px;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 46px; height: 46px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s;
+    z-index: 10001;
+    user-select: none;
+    line-height: 1;
+  }
+  .lb-nav:hover { background: rgba(212,149,106,.35); }
+  .lb-prev { left: 0; }
+  .lb-next { right: 0; }
+
+  @media (max-width: 600px) {
+    .lb-nav { width: 36px; height: 36px; font-size: 20px; }
+  }
+
+  .lb-counter {
+    color: #7a5c45;
+    font-size: 12px;
+    margin-top: 10px;
+    letter-spacing: 1px;
+  }
+
+  .lb-thumbs {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    max-width: 860px;
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: #3d2d1e transparent;
+  }
+  .lb-thumbs::-webkit-scrollbar { height: 4px; }
+  .lb-thumbs::-webkit-scrollbar-thumb { background: #3d2d1e; border-radius: 2px; }
+
+  .lb-thumb {
+    width: 68px; height: 48px;
+    object-fit: cover;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: .4;
+    border: 1.5px solid transparent;
+    transition: opacity .2s, border-color .2s;
+    flex-shrink: 0;
+  }
+  .lb-thumb.active { opacity: 1; border-color: #d4956a; }
+  .lb-thumb:hover { opacity: .8; }
 </style>
 </head>
 <body>
 <div class="site">
 
   <div class="hero">
-    <h1>Premium Stays</h1>
+    <h1>IMANZI Space Stays</h1>
     <p>Kigali &mdash; Rwanda</p>
   </div>
 
@@ -80,84 +180,56 @@
 
     <!-- ===== CARD 1: KACYIRU ===== -->
     <div class="card">
-      <div class="main-img-wrap" onclick="openGallery(this)">
-        <!-- REPLACE with your Kacyiru main photo URL -->
+      <div class="main-img-wrap" onclick="openLightbox('Kacyiru', ['./PHOTOS/KACYIRU/1.jpeg','./PHOTOS/KACYIRU/kax 2.jpeg','./PHOTOS/KACYIRU/ROOM1.jpeg','./PHOTOS/KACYIRU/ROOM 2.jpeg','./PHOTOS/KACYIRU/ROOM3.jpeg','./PHOTOS/KACYIRU/BATH 2.jpeg'], 0)">
         <img class="main-img" src="./PHOTOS/KACYIRU/1.jpeg" alt="Kacyiru property">
         <span class="img-label">Kacyiru</span>
         <span class="click-hint">View photos</span>
-        <div class="gallery-overlay">
-          <button class="close-btn" onclick="event.stopPropagation();closeGallery(this)">&#x2715;</button>
-          <!-- REPLACE the 4 src values below with your Kacyiru gallery photos -->
-          <img class="gallery-big" src="./PHOTOS/KACYIRU/kax 2.jpeg" alt="">
-          <div class="gallery-thumbs">
-            <img class="gallery-thumb active" src="./PHOTOS/KACYIRU/ROOM 2.jpeg" onclick="event.stopPropagation();switchImg("./PHOTOS/KACYIRU/ROOM 2.jpeg")" alt="">
-            <img class="gallery-thumb" src="./PHOTOS/KACYIRU/ROOM3.jpeg" onclick="event.stopPropagation();switchImg("./PHOTOS/KACYIRU/ROOM3.jpeg")" alt="">
-            <img class="gallery-thumb" src="./PHOTOS/KACYIRU/BATH 2.jpeg" onclick="event.stopPropagation();switchImg( "./PHOTOS/KACYIRU/BATH 2.jpeg")" alt="">
-
-          </div>
-        </div>
       </div>
-      <!-- REPLACE the 3 thumb src values with your Kagugu room photos -->
       <div class="thumb-strip">
-        <img class="thumb" src="./PHOTOS/KACYIRU/ROOM1.jpeg" alt="Room 1">
-        <img class="thumb" src="./PHOTOS/KACYIRU/ROOM 2.jpeg" alt="Room 2">
-        <img class="thumb" src="./PHOTOS/KACYIRU/ROOM3.jpeg" alt="Room 3">
+        <img class="thumb" src="./PHOTOS/KACYIRU/ROOM1.jpeg" alt="Room 1" onclick="openLightbox('Kacyiru', ['./PHOTOS/KACYIRU/1.jpeg','./PHOTOS/KACYIRU/kax 2.jpeg','./PHOTOS/KACYIRU/ROOM1.jpeg','./PHOTOS/KACYIRU/ROOM 2.jpeg','./PHOTOS/KACYIRU/ROOM3.jpeg','./PHOTOS/KACYIRU/BATH 2.jpeg'], 2)">
+        <img class="thumb" src="./PHOTOS/KACYIRU/ROOM 2.jpeg" alt="Room 2" onclick="openLightbox('Kacyiru', ['./PHOTOS/KACYIRU/1.jpeg','./PHOTOS/KACYIRU/kax 2.jpeg','./PHOTOS/KACYIRU/ROOM1.jpeg','./PHOTOS/KACYIRU/ROOM 2.jpeg','./PHOTOS/KACYIRU/ROOM3.jpeg','./PHOTOS/KACYIRU/BATH 2.jpeg'], 3)">
+        <img class="thumb" src="./PHOTOS/KACYIRU/ROOM3.jpeg" alt="Room 3" onclick="openLightbox('Kacyiru', ['./PHOTOS/KACYIRU/1.jpeg','./PHOTOS/KACYIRU/kax 2.jpeg','./PHOTOS/KACYIRU/ROOM1.jpeg','./PHOTOS/KACYIRU/ROOM 2.jpeg','./PHOTOS/KACYIRU/ROOM3.jpeg','./PHOTOS/KACYIRU/BATH 2.jpeg'], 4)">
+        <img class="thumb" src="./PHOTOS/KACYIRU/kax 2.jpeg" alt="Room 2" onclick="openLightbox('Kacyiru', ['./PHOTOS/KACYIRU/1.jpeg','./PHOTOS/KACYIRU/kax 2.jpeg','./PHOTOS/KACYIRU/ROOM1.jpeg','./PHOTOS/KACYIRU/ROOM 2.jpeg','./PHOTOS/KACYIRU/ROOM3.jpeg','./PHOTOS/KACYIRU/BATH 2.jpeg'], 1)">
+        
       </div>
-      
       <div class="room-prices">
-        <span class="rpill">Studio &mdash; $17/night</span>
+        <span class="rpill"> &mdash; $17/night</span>
         <span class="rpill">1 Bedroom &mdash; $17/night</span>
-        <span class="rpill">Master Bedroom &mdash; $25/night unavailable at the moment</span>
+        <span class="rpill">Master Bedroom &mdash; $25/night (unavailable at the moment)</span>
       </div>
       <div class="card-body">
         <div class="loc">
           <svg viewBox="0 0 24 24" fill="none" stroke="#7a5c45" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          
- 
-          Kacyiru, Kigali, Rwanda 
+          Kacyiru, Kigali, Rwanda
         </div>
         <div class="amenities">
           <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>Wi-Fi available</span>
           <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>Breakfast $3</span>
         </div>
       </div>
-      <div class="card-footer"><span class="from-label">from</span><span class="from-price">$30/ night</span>
-      <a href="https://www.google.com/maps?q=-1.932477079028176,30.072717349532056 " target="_blank" style="font-size:12px; color:#d4956a; border:0.5px solid #d4956a; border-radius:20px; padding:4px 12px; text-decoration:none;">
-  Get directions</a>
+      <div class="card-footer">
+        <span class="from-label">price</span>
+        <span class="from-price">$17/ night</span>
+        <a href="https://www.google.com/maps?q=-1.932477079028176,30.072717349532056" target="_blank" style="font-size:12px; color:#d4956a; border:0.5px solid #d4956a; border-radius:20px; padding:4px 12px; text-decoration:none;">Get directions</a>
       </div>
-      
-
     </div>
 
     <!-- ===== CARD 2: KAGUGU ===== -->
     <div class="card">
-      <div class="main-img-wrap" onclick="openGallery(this)">
-        <!-- REPLACE with your Kagugu main photo URL -->
+      <div class="main-img-wrap" onclick="openLightbox('Kagugu', ['./PHOTOS/KAGUGU/DINING.jpeg','./PHOTOS/KAGUGU/LIVING.jpeg','./PHOTOS/KAGUGU/MAIN.jpeg','./PHOTOS/KAGUGU/ROOM1.jpeg','./PHOTOS/KAGUGU/2.jpeg'], 0)">
         <img class="main-img" src="./PHOTOS/KAGUGU/DINING.jpeg" alt="Kagugu property">
         <span class="img-label">Kagugu</span>
         <span class="click-hint">View photos</span>
-        <div class="gallery-overlay">
-          <button class="close-btn" onclick="event.stopPropagation();closeGallery(this)">&#x2715;</button>
-          <!-- REPLACE the 4 src values below with your Kagugu gallery photos -->
-          <img class="gallery-big" src="./PHOTOS/KAGUGU/DINING.jpeg" alt="">
-          <div class="gallery-thumbs">
-            <img class="gallery-thumb active" src="./PHOTOS/KAGUGU/LIVING.jpeg" onclick="event.stopPropagation();switchImg(this,'https://')" alt="">
-            <img class="gallery-thumb" src="./PHOTOS/KAGUGU/MAIN.jpeg" onclick="event.stopPropagation();switchImg(this,'https://images.unsplash.com/photo-1502005097973-6a7082348e28?w=800&q=80')" alt="">
-            <img class="gallery-thumb" src="./PHOTOS/KAGUGU/ROOM1.jpeg" onclick="event.stopPropagation();switchImg(this,'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80')" alt="">
-            <img class="gallery-thumb" src="." onclick="event.stopPropagation();switchImg(this,'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&q=80')" alt="">
-          </div>
-        </div>
       </div>
-      <!-- REPLACE the 3 thumb src values with your Kagugu room photos -->
       <div class="thumb-strip">
-        <img class="thumb" src="./PHOTOS/KAGUGU/MAIN.jpeg" alt="Room 1">
-        <img class="thumb" src="./PHOTOS/KAGUGU/ROOM1.jpeg" alt="Room 2">
-        <img class="thumb" src="./PHOTOS/KAGUGU/2.jpeg" alt="Room 3">
+        <img class="thumb" src="./PHOTOS/KAGUGU/MAIN.jpeg" alt="Room 1" onclick="openLightbox('Kagugu', ['./PHOTOS/KAGUGU/DINING.jpeg','./PHOTOS/KAGUGU/LIVING.jpeg','./PHOTOS/KAGUGU/MAIN.jpeg','./PHOTOS/KAGUGU/ROOM1.jpeg','./PHOTOS/KAGUGU/2.jpeg'], 2)">
+        <img class="thumb" src="./PHOTOS/KAGUGU/ROOM1.jpeg" alt="Room 2" onclick="openLightbox('Kagugu', ['./PHOTOS/KAGUGU/DINING.jpeg','./PHOTOS/KAGUGU/LIVING.jpeg','./PHOTOS/KAGUGU/MAIN.jpeg','./PHOTOS/KAGUGU/ROOM1.jpeg','./PHOTOS/KAGUGU/2.jpeg'], 3)">
+        <img class="thumb" src="./PHOTOS/KAGUGU/2.jpeg" alt="Room 3" onclick="openLightbox('Kagugu', ['./PHOTOS/KAGUGU/DINING.jpeg','./PHOTOS/KAGUGU/LIVING.jpeg','./PHOTOS/KAGUGU/MAIN.jpeg','./PHOTOS/KAGUGU/ROOM1.jpeg','./PHOTOS/KAGUGU/2.jpeg'], 4)">
       </div>
       <div class="room-prices">
         <span class="rpill">Garden Room &mdash; $17/night</span>
         <span class="rpill">Deluxe &mdash; $17/night</span>
-        <span class="rpill">Master Suite  not available at the moment &mdash; $25/night</span> 
+        <span class="rpill">Master bedroom (not available at the moment) &mdash; $25/night</span>
       </div>
       <div class="card-body">
         <div class="loc">
@@ -169,42 +241,31 @@
           <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>Breakfast $3</span>
         </div>
       </div>
-      <div class="card-footer"><span class="from-label">from</span><span class="from-price">$30 / night</span>
-      <a href="https://www.google.com/maps?q=-1.9073691295811406,30.085091424695023 " target="_blank" style="font-size:12px; color:#d4956a; border:0.5px solid #d4956a; border-radius:20px; padding:4px 12px; text-decoration:none;">
-  Get directions</a>
+      <div class="card-footer">
+        <span class="from-label">price</span>
+        <span class="from-price">$17/ night</span>
+        <a href="https://www.google.com/maps?q=-1.9073691295811406,30.085091424695023" target="_blank" style="font-size:12px; color:#d4956a; border:0.5px solid #d4956a; border-radius:20px; padding:4px 12px; text-decoration:none;">Get directions</a>
       </div>
-      
     </div>
 
     <!-- ===== CARD 3: GISOZI ===== -->
     <div class="card">
-      <div class="main-img-wrap" onclick="openGallery(this)">
-        <!-- REPLACE with your Gisozi main photo URL -->
+      <div class="main-img-wrap" onclick="openLightbox('Gisozi', ['./PHOTOS/GISOZI/outside.jpeg','./PHOTOS/GISOZI/LIVING.jpeg','./PHOTOS/GISOZI/INSIDE.jpeg','./PHOTOS/GISOZI/KItchen.jpeg','./PHOTOS/GISOZI/ROOM1.jpeg','./PHOTOS/GISOZI/ROOM2.jpeg','./PHOTOS/GISOZI/bathroom.jpeg'], 0)">
         <img class="main-img" src="./PHOTOS/GISOZI/outside.jpeg" alt="Gisozi property">
         <span class="img-label">Gisozi</span>
         <span class="click-hint">View photos</span>
-        <div class="gallery-overlay">
-          <button class="close-btn" onclick="event.stopPropagation();closeGallery(this)">&#x2715;</button>
-          <!-- REPLACE the 4 src values below with your Gisozi gallery photos -->
-          <img class="gallery-big" src="./PHOTOS/GISOZI/LIVING.jpeg" alt="">
-          <div class="gallery-thumbs">
-            <img class="gallery-thumb active" src="./PHOTOS/GISOZI/INSIDE.jpeg" onclick="event.stopPropagation();switchImg(this,'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80')" alt="">
-            <img class="gallery-thumb" src="./PHOTOS/GISOZI/KItchen.jpeg" onclick="event.stopPropagation();switchImg(this,'https://images.unsplash.com/photo-1507089947368-19c1da9775ae?w=800&q=80')" alt="">
-            <img class="gallery-thumb" src="./PHOTOS/GISOZI/LIVING.jpeg" onclick="event.stopPropagation();switchImg(this,'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80')" alt="">
-            <img class="gallery-thumb" src="./PHOTOS/GISOZI/bathroom.jpeg" onclick="event.stopPropagation();switchImg(this,'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=800&q=80')" alt="">
-          </div>
-        </div>
       </div>
-      <!-- REPLACE the 3 thumb src values with your Gisozi room photos -->
       <div class="thumb-strip">
-        <img class="thumb" src="./PHOTOS/GISOZI/ROOM1.jpeg" alt="Room 1">
-        <img class="thumb" src="./PHOTOS/GISOZI/ROOM2.jpeg" alt="Room 2">
-        <img class="thumb" src="./PHOTOS/GISOZI/LIVING.jpeg" alt="Room 3">
+        <img class="thumb" src="./PHOTOS/GISOZI/ROOM1.jpeg" alt="Room 1" onclick="openLightbox('Gisozi', ['./PHOTOS/GISOZI/outside.jpeg','./PHOTOS/GISOZI/LIVING.jpeg','./PHOTOS/GISOZI/INSIDE.jpeg','./PHOTOS/GISOZI/KItchen.jpeg','./PHOTOS/GISOZI/ROOM1.jpeg','./PHOTOS/GISOZI/ROOM2.jpeg','./PHOTOS/GISOZI/bathroom.jpeg'], 4)">
+        <img class="thumb" src="./PHOTOS/GISOZI/ROOM2.jpeg" alt="Room 2" onclick="openLightbox('Gisozi', ['./PHOTOS/GISOZI/outside.jpeg','./PHOTOS/GISOZI/LIVING.jpeg','./PHOTOS/GISOZI/INSIDE.jpeg','./PHOTOS/GISOZI/KItchen.jpeg','./PHOTOS/GISOZI/ROOM1.jpeg','./PHOTOS/GISOZI/ROOM2.jpeg','./PHOTOS/GISOZI/bathroom.jpeg'], 5)">
+        <img class="thumb" src="./PHOTOS/GISOZI/LIVING.jpeg" alt="Living" onclick="openLightbox('Gisozi', ['./PHOTOS/GISOZI/outside.jpeg','./PHOTOS/GISOZI/LIVING.jpeg','./PHOTOS/GISOZI/INSIDE.jpeg','./PHOTOS/GISOZI/KItchen.jpeg','./PHOTOS/GISOZI/ROOM1.jpeg','./PHOTOS/GISOZI/ROOM2.jpeg','./PHOTOS/GISOZI/bathroom.jpeg'], 1)">
       </div>
       <div class="room-prices">
         <span class="rpill">Cozy Room &mdash; $30/night</span>
         <span class="rpill">Standard &mdash; $30/night</span>
-        <span class="rpill">Suite &mdash; $30/night</span>
+        <span class="rpill">Terrace Room &mdash; $30/night</span>
+        <span class="rpill">Jade Room &mdash; $30/night</span>
+
       </div>
       <div class="card-body">
         <div class="loc">
@@ -216,9 +277,10 @@
           <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>Breakfast $3</span>
         </div>
       </div>
-      <div class="card-footer"><span class="from-label">from</span><span class="from-price">$35/ night</span>
-      <a href="https://www.google.com/maps?q=-1.9081360005976433,30.060564707084446 " target="_blank" style="font-size:12px; color:#d4956a; border:0.5px solid #d4956a; border-radius:20px; padding:4px 12px; text-decoration:none;">
-  Get directions</a>
+      <div class="card-footer">
+        <span class="from-label">price</span>
+        <span class="from-price">$30/ night</span>
+        <a href="https://www.google.com/maps?q=-1.9081360005976433,30.060564707084446" target="_blank" style="font-size:12px; color:#d4956a; border:0.5px solid #d4956a; border-radius:20px; padding:4px 12px; text-decoration:none;">Get directions</a>
       </div>
     </div>
 
@@ -237,18 +299,80 @@
     </div>
   </div>
 
-  <div class="site-footer">&copy; 2026 Premium Stays Kigali</div>
+  <div class="site-footer">&copy; 2026 IMANZI Space Stays</div>
+</div>
 
+<!-- ── LIGHTBOX ── -->
+<div class="lb-overlay" id="lb" onclick="lbBgClick(event)">
+  <button class="lb-close" onclick="closeLightbox()">&#x2715;</button>
+  <div class="lb-img-wrap">
+    <button class="lb-nav lb-prev" onclick="lbStep(-1)">&#8249;</button>
+    <img class="lb-img" id="lb-img" src="" alt="">
+    <button class="lb-nav lb-next" onclick="lbStep(1)">&#8250;</button>
+  </div>
+  <div class="lb-counter" id="lb-counter"></div>
+  <div class="lb-thumbs" id="lb-thumbs"></div>
 </div>
 
 <script>
-  function openGallery(wrap) { wrap.querySelector('.gallery-overlay').classList.add('active'); }
-  function closeGallery(btn) { btn.closest('.gallery-overlay').classList.remove('active'); }
-  function switchImg(thumb, src) {
-    var o = thumb.closest('.gallery-overlay');
-    o.querySelector('.gallery-big').src = src;
-    o.querySelectorAll('.gallery-thumb').forEach(function(t){ t.classList.remove('active'); });
-    thumb.classList.add('active');
+  var lbImages = [], lbIndex = 0, lbName = '';
+
+  function openLightbox(name, imgs, idx) {
+    lbName = name;
+    lbImages = imgs;
+    lbIndex = idx;
+    renderLb();
+    document.getElementById('lb').classList.add('open');
+    document.addEventListener('keydown', lbKey);
+  }
+
+  function closeLightbox() {
+    document.getElementById('lb').classList.remove('open');
+    document.removeEventListener('keydown', lbKey);
+  }
+
+  function lbKey(e) {
+    if (e.key === 'ArrowRight') lbStep(1);
+    else if (e.key === 'ArrowLeft') lbStep(-1);
+    else if (e.key === 'Escape') closeLightbox();
+  }
+
+  function lbBgClick(e) {
+    if (e.target === document.getElementById('lb')) closeLightbox();
+  }
+
+  function lbStep(dir) {
+    lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length;
+    renderLb();
+  }
+
+  function lbGoTo(i) {
+    lbIndex = i;
+    renderLb();
+  }
+
+  function renderLb() {
+    var imgEl = document.getElementById('lb-img');
+    imgEl.style.opacity = '0';
+    imgEl.src = lbImages[lbIndex];
+    imgEl.onload = function() { imgEl.style.opacity = '1'; };
+
+    document.getElementById('lb-counter').textContent =
+      lbName + '  —  ' + (lbIndex + 1) + ' / ' + lbImages.length;
+
+    var tc = document.getElementById('lb-thumbs');
+    tc.innerHTML = '';
+    lbImages.forEach(function(src, i) {
+      var t = document.createElement('img');
+      t.className = 'lb-thumb' + (i === lbIndex ? ' active' : '');
+      t.src = src;
+      t.alt = '';
+      t.onclick = function() { lbGoTo(i); };
+      tc.appendChild(t);
+    });
+
+    var active = tc.querySelector('.active');
+    if (active) active.scrollIntoView({ block: 'nearest', inline: 'center' });
   }
 </script>
 
